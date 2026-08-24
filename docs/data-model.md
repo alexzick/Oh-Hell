@@ -8,6 +8,8 @@ agency ─┬─ agency_member          staff, joined to auth.users
         ├─ client ─┬─ client_city      per-client, editable city tabs
         │          └─ roster ── roster_item ─┬─ roster_item_private   MATCHMAKER ONLY
         │                                    └─ client_feedback       CLIENT WRITES
+        │                                    └─ introduction ─┬─ debrief ── debrief_claim
+        │                                                     └─ safety_report   SEPARATE
         ├─ candidate ── candidate_internal   MATCHMAKER ONLY
         ├─ booking_type, availability_rule, booking, calendar_connection
         ├─ payment, (stripe_event)
@@ -73,3 +75,20 @@ authoritative and re-derives keys.
 she agreed to and when. `candidate_internal_consent_guard` refuses any row with
 `network_listed = true` and no consent recorded, so the constraint holds for
 imports and scripts, not just the UI.
+
+
+## The debrief
+
+After an introduction, `debrief` holds one account per `voice` — the client's,
+the candidate's, and the matchmaker's own read. `voice` is whose account it is;
+`author_kind` is who typed it. They differ today because candidates have no
+accounts, so her side arrives `relayed` through a matchmaker rather than
+`stated`.
+
+The client's RLS policy on `debrief` matches only `voice = 'client'` rows on
+their own introductions, so the other accounts are not filtered out of their
+view — they are unreachable from their session, the same pattern as
+`roster_item_private`.
+
+`debrief_claim` is derived structure and is empty until extraction is switched
+on; `safety_report` is deliberately separate from all of it. See ADR-007.

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getRepo } from "@/lib/db";
 import { CandidateEditor } from "@/components/candidate-editor";
+import { summarise } from "@/lib/types";
 
 export default async function CandidateEditorPage({
   params,
@@ -20,6 +21,8 @@ export default async function CandidateEditorPage({
 
   const internal = ws.internal[candidate.id] ?? { ig: "", source: "", notes: "" };
   const feedback = ws.feedback[item.id] ?? null;
+  const introduction = ws.introductions.find((i) => i.rosterItemId === item.id) ?? null;
+  const outcome = introduction ? summarise(introduction.id, ws.debriefs) : null;
 
   return (
     <CandidateEditor
@@ -31,6 +34,8 @@ export default async function CandidateEditorPage({
       source={internal.source}
       feedback={feedback}
       cities={ws.cities.filter((c) => c.clientId === clientId)}
+      introductionId={introduction?.id ?? null}
+      outcome={outcome}
     />
   );
 }

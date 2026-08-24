@@ -185,6 +185,10 @@ export interface PortalRosterItem {
   blurb: string;
   position: number;
   feedback: ClientFeedback;
+  /** Present once the introduction has been logged. */
+  introduction: Introduction | null;
+  /** The client's own account only. Hers is unreachable from this view. */
+  myDebrief: Debrief | null;
 }
 
 // --- Scheduling -------------------------------------------------------------
@@ -258,4 +262,92 @@ export interface ReferralRequest {
   /** Set when released: scoped, expiring read access to the real candidate. */
   releaseExpiresAt: string | null;
   releasedFields: string[] | null;
+}
+
+// --- Debrief ----------------------------------------------------------------
+
+/**
+ * Post-date intelligence. See docs/decisions.md ADR-007.
+ *
+ * `body` is the record — written by a person, never rewritten by the system.
+ * Everything structured is either the one enum worth demanding at capture time
+ * (`disposition`) or derived later into claims that a human confirms.
+ */
+export type DebriefAuthor = "client" | "candidate" | "matchmaker";
+
+/** Whose account this is, which is not the same as who typed it. */
+export type DebriefVoice = "client" | "candidate" | "self";
+
+export type DispositionKey = "continue" | "decline" | "unsure" | "no_contact";
+
+export const DISPOSITION: Record<DispositionKey, { label: string; color: string; hint: string }> = {
+  continue: { label: "Would see again", color: "#4E7A52", hint: "There's something here" },
+  unsure: { label: "Unsure", color: "#B0894B", hint: "Torn, or too early to say" },
+  decline: { label: "Not a match", color: "#B25B4E", hint: "No second date" },
+  no_contact: { label: "Didn't happen", color: "#6E7A8A", hint: "Cancelled, or never met" },
+};
+
+export const DISPOSITION_KEYS = Object.keys(DISPOSITION) as DispositionKey[];
+
+export type ClaimProvenance = "stated" | "relayed" | "inferred" | "observed";
+
+export interface Introduction {
+  id: string;
+  agencyId: string;
+  rosterItemId: string;
+  bookingId: string | null;
+  metAt: string | null;
+}
+
+export interface Debrief {
+  id: string;
+  introductionId: string;
+  agencyId: string;
+  authorKind: DebriefAuthor;
+  authorId: string | null;
+  voice: DebriefVoice;
+  provenance: ClaimProvenance;
+  disposition: DispositionKey | null;
+  body: string;
+  updatedAt: string | null;
+}
+
+/**
+ * The two accounts of one evening, and how far apart they are. Divergence is
+ * computed rather than stored so it can never fall out of step with its inputs.
+ */
+export interface OutcomeSummary {
+  introductionId: string;
+  client: Debrief | null;
+  candidate: Debrief | null;
+  matchmaker: Debrief | null;
+  /** null while either side is still missing. */
+  divergent: boolean | null;
+  mutual: "continue" | "decline" | "mixed" | null;
+}
+
+export function summarise(introductionId: string, debriefs: Debrief[]): OutcomeSummary {
+  const forVoice = (v: DebriefVoice) =>
+    debriefs.find((d) => d.introductionId === introductionId && d.voice === v) ?? null;
+  const client = forVoice("client");
+  const candidate = forVoice("candidate");
+  const a = client?.disposition ?? null;
+  const b = candidate?.disposition ?? null;
+
+  let mutual: OutcomeSummary["mutual"] = null;
+  if (a && b) {
+    if (a === "continue" && b === "continue") mutual = "continue";
+    else if (a === "decline" && b === "decline") mutual = "decline";
+    else mutual = "mixed";
+  }
+  return {
+    introductionId,
+    client,
+    candidate,
+    matchmaker: forVoice("self"),
+    // The asymmetric case is the one worth surfacing: one side wants a second
+    // date and the other does not.
+    divergent: a && b ? a !== b : null,
+    mutual,
+  };
 }

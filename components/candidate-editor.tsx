@@ -3,7 +3,9 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import type { Candidate, City, ClientFeedback, RosterItem, StatusKey } from "@/lib/types";
+import type {
+  Candidate, City, ClientFeedback, OutcomeSummary, RosterItem, StatusKey,
+} from "@/lib/types";
 import { REACTION, STATUS, STATUS_KEYS } from "@/lib/types";
 import { photoStyle, EmptyPhoto } from "@/components/photo";
 import { useAutosave } from "@/lib/use-autosave";
@@ -12,11 +14,13 @@ import {
   updateCandidateAction, updateRosterItemAction,
 } from "@/lib/actions";
 import { PhotoReframe } from "@/components/photo-reframe";
+import { DebriefBlock } from "@/components/debrief-block";
 
 const CONSENT_VERSION = "network-consent-v1";
 
 export function CandidateEditor({
   clientId, clientName, item, candidate, ig, source, feedback, cities,
+  introductionId, outcome,
 }: {
   clientId: string;
   clientName: string;
@@ -26,6 +30,8 @@ export function CandidateEditor({
   source: string;
   feedback: ClientFeedback | null;
   cities: City[];
+  introductionId: string | null;
+  outcome: OutcomeSummary | null;
 }) {
   const router = useRouter();
   const [, startTransition] = useTransition();
@@ -192,6 +198,14 @@ export function CandidateEditor({
                   {feedback?.reaction ? "No written note." : `Nothing from ${clientName} yet.`}
                 </div>}
           </div>
+
+          <DebriefBlock
+            rosterItemId={item.id}
+            candidateName={candidate.name}
+            clientName={clientName}
+            introductionId={introductionId}
+            outcome={outcome}
+          />
 
           <NetworkListing candidate={candidate} />
 

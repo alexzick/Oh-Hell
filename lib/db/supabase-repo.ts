@@ -1,6 +1,7 @@
 import type {
-  Agency, Booking, Brand, Candidate, ClientFeedback, NetworkProfile,
-  PortalRosterItem, ReferralRequest, RosterItem, ReactionKey,
+  Agency, Booking, Brand, Candidate, ClientFeedback, Debrief, DebriefVoice,
+  DispositionKey, Introduction, NetworkProfile, PortalRosterItem, ReferralRequest,
+  RosterItem, ReactionKey,
 } from "@/lib/types";
 import type { CandidateInput, PortalView, Repo, Workspace } from "./repo";
 import { serverClient } from "./supabase-client";
@@ -45,6 +46,16 @@ const camel = {
     candidateId: r.candidate_id, memberId: r.member_id, rosterItemId: r.roster_item_id,
     startsAt: r.starts_at, endsAt: r.ends_at, status: r.status, location: r.location, notes: r.notes,
   }),
+  introduction: (r: Row): Introduction => ({
+    id: r.id, agencyId: r.agency_id, rosterItemId: r.roster_item_id,
+    bookingId: r.booking_id, metAt: r.met_at,
+  }),
+  debrief: (r: Row): Debrief => ({
+    id: r.id, introductionId: r.introduction_id, agencyId: r.agency_id,
+    authorKind: r.author_kind, authorId: r.author_id, voice: r.voice,
+    provenance: r.provenance, disposition: r.disposition, body: r.body,
+    updatedAt: r.updated_at,
+  }),
   network: (r: Row): NetworkProfile => ({
     id: r.id, candidateId: r.candidate_id, agencyId: r.agency_id,
     agencyName: r.agency?.name ?? "", ageBand: r.age_band, metro: r.metro,
@@ -79,13 +90,16 @@ export class SupabaseRepo implements Repo {
 
   async loadWorkspace(agencyId: string): Promise<Workspace> {
     const db = await serverClient();
-    const [agency, members, clients, rosters, bookingTypes, bookings] = await Promise.all([
+    const [agency, members, clients, rosters, bookingTypes, bookings, introductions, debriefs] =
+      await Promise.all([
       db.from("agency").select("*").eq("id", agencyId).single(),
       db.from("agency_member").select("*").eq("agency_id", agencyId),
       db.from("client").select("*").eq("agency_id", agencyId).order("created_at"),
       db.from("roster").select("*").eq("agency_id", agencyId),
       db.from("booking_type").select("*").eq("agency_id", agencyId),
       db.from("booking").select("*").eq("agency_id", agencyId).order("starts_at"),
+      db.from("introduction").select("*").eq("agency_id", agencyId),
+      db.from("debrief").select("*").eq("agency_id", agencyId),
     ]);
 
     const clientIds = (unwrap(clients) as Row[]).map((c) => c.id);
@@ -148,6 +162,8 @@ export class SupabaseRepo implements Repo {
         durationMin: b.duration_min, priceCents: b.price_cents, active: b.active,
       })),
       bookings: (unwrap(bookings) as Row[]).map(camel.booking),
+      introductions: (unwrap(introductions) as Row[]).map(camel.introduction),
+      debriefs: (unwrap(debriefs) as Row[]).map(camel.debrief),
     };
   }
 
@@ -181,11 +197,24 @@ export class SupabaseRepo implements Repo {
     ]);
 
     const itemRows = unwrap(items) as Row[];
-    const feedbackRows = itemRows.length
+    const itemIds = itemRows.map((i) => i.id);
+    const feedbackRows = itemIds.length
       ? (unwrap(await db.from("client_feedback").select("*")
-          .in("roster_item_id", itemRows.map((i) => i.id))) as Row[])
+          .in("roster_item_id", itemIds)) as Row[])
       : [];
     const byItem = new Map(feedbackRows.map((f) => [f.roster_item_id, camel.feedback(f)]));
+
+    const introRows = itemIds.length
+      ? (unwrap(await db.from("introduction").select("*").in("roster_item_id", itemIds)) as Row[])
+      : [];
+    const introByItem = new Map(introRows.map((r) => [r.roster_item_id, camel.introduction(r)]));
+    // voice = 'client' is also all RLS would return here; stating it at the
+    // call site keeps the intent visible.
+    const myDebriefRows = introRows.length
+      ? (unwrap(await db.from("debrief").select("*")
+          .in("introduction_id", introRows.map((r) => r.id)).eq("voice", "client")) as Row[])
+      : [];
+    const debriefByIntro = new Map(myDebriefRows.map((r) => [r.introduction_id, camel.debrief(r)]));
 
     const portalItems: PortalRosterItem[] = itemRows.flatMap((i) => {
       const c = i.candidate as Row | null;
@@ -197,6 +226,8 @@ export class SupabaseRepo implements Repo {
           faith: c.faith, about: c.about, photoUrl: c.photo_url, photoFrame: c.photo_frame,
         },
         feedback: byItem.get(i.id) ?? { rosterItemId: i.id, reaction: null, note: "", updatedAt: null },
+        introduction: introByItem.get(i.id) ?? null,
+        myDebrief: debriefByIntro.get(introByItem.get(i.id)?.id ?? "") ?? null,
       }];
     });
 
@@ -413,6 +444,53 @@ export class SupabaseRepo implements Repo {
     if (patch.reaction !== undefined) row.reaction = patch.reaction;
     if (patch.note !== undefined) row.note = patch.note;
     unwrap(await db.from("client_feedback").upsert(row).select("roster_item_id"));
+  }
+
+  async logIntroduction(rosterItemId: string, metAt: string | null) {
+    const db = await serverClient();
+    const existing = unwrap(await db.from("introduction").select("id")
+      .eq("roster_item_id", rosterItemId).maybeSingle()) as Row | null;
+    if (existing) {
+      if (metAt !== null) {
+        unwrap(await db.from("introduction").update({ met_at: metAt })
+          .eq("id", existing.id).select("id"));
+      }
+      return existing.id as string;
+    }
+    const item = unwrap(await db.from("roster_item")
+      .select("id, roster(agency_id)").eq("id", rosterItemId).single()) as Row;
+    const row = unwrap(await db.from("introduction").insert({
+      agency_id: (item.roster as Row).agency_id,
+      roster_item_id: rosterItemId,
+      met_at: metAt ?? new Date().toISOString(),
+    }).select("id").single()) as Row;
+    return row.id as string;
+  }
+
+  async saveDebrief(input: {
+    introductionId: string;
+    voice: DebriefVoice;
+    authorKind: Debrief["authorKind"];
+    provenance: Debrief["provenance"];
+    disposition?: DispositionKey | null;
+    body?: string;
+  }) {
+    const db = await serverClient();
+    const intro = unwrap(await db.from("introduction").select("id, agency_id")
+      .eq("id", input.introductionId).single()) as Row;
+    const row: Row = {
+      introduction_id: input.introductionId,
+      agency_id: intro.agency_id,
+      author_kind: input.authorKind,
+      voice: input.voice,
+      provenance: input.provenance,
+      updated_at: new Date().toISOString(),
+    };
+    if (input.disposition !== undefined) row.disposition = input.disposition;
+    if (input.body !== undefined) row.body = input.body;
+    // One account per voice per introduction — editing updates in place.
+    unwrap(await db.from("debrief")
+      .upsert(row, { onConflict: "introduction_id,voice" }).select("id"));
   }
 
   async updateBrand(agencyId: string, brand: Brand) {

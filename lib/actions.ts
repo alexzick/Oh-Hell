@@ -3,7 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { getRepo } from "@/lib/db";
-import type { Candidate, ReactionKey, RosterItem, Brand, Booking } from "@/lib/types";
+import type {
+  Candidate, ReactionKey, RosterItem, Brand, Booking, DispositionKey,
+} from "@/lib/types";
 
 /**
  * Every mutation the UI can perform. They are thin on purpose: authorization
@@ -101,6 +103,54 @@ export async function setFeedbackAction(
 ) {
   await getRepo().setFeedback(rosterItemId, patch);
   revalidatePath("/portal", "layout");
+  revalidateWorkspace();
+}
+
+// --- debrief (ADR-007) ------------------------------------------------------
+//
+// Two entry points rather than one parameterised action, so a portal request
+// has no way to express "write the candidate's account". The voice, the author
+// and the provenance are fixed by which door you came through.
+
+export async function logIntroductionAction(rosterItemId: string) {
+  const id = await getRepo().logIntroduction(rosterItemId, null);
+  revalidateWorkspace();
+  revalidatePath("/portal", "layout");
+  return id;
+}
+
+/** The client's own account, written by the client, in their portal. */
+export async function saveClientDebriefAction(
+  introductionId: string,
+  patch: { disposition?: DispositionKey | null; body?: string },
+) {
+  await getRepo().saveDebrief({
+    introductionId,
+    voice: "client",
+    authorKind: "client",
+    provenance: "stated",
+    ...patch,
+  });
+  revalidatePath("/portal", "layout");
+  revalidateWorkspace();
+}
+
+/**
+ * The matchmaker writing up either the candidate's account — which reaches them
+ * second-hand, hence `relayed` — or their own read of the pairing.
+ */
+export async function saveInternalDebriefAction(
+  introductionId: string,
+  voice: "candidate" | "self",
+  patch: { disposition?: DispositionKey | null; body?: string },
+) {
+  await getRepo().saveDebrief({
+    introductionId,
+    voice,
+    authorKind: "matchmaker",
+    provenance: voice === "candidate" ? "relayed" : "inferred",
+    ...patch,
+  });
   revalidateWorkspace();
 }
 

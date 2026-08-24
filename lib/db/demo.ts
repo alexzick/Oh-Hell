@@ -3,8 +3,8 @@ import path from "node:path";
 import { randomUUID } from "node:crypto";
 import type {
   Agency, Booking, BookingType, Brand, Candidate, City, Client, ClientFeedback,
-  Member, NetworkProfile, PortalRosterItem, ReferralRequest, Roster, RosterItem,
-  ReactionKey,
+  Debrief, DebriefVoice, DispositionKey, Introduction, Member, NetworkProfile,
+  PortalRosterItem, ReferralRequest, Roster, RosterItem, ReactionKey,
 } from "@/lib/types";
 import type { CandidateInput, PortalView, Repo, Workspace } from "./repo";
 import seed from "@/data/seed-unicorn-club.json";
@@ -33,6 +33,8 @@ interface DemoState {
   bookings: Booking[];
   networkProfiles: NetworkProfile[];
   referrals: ReferralRequest[];
+  introductions: Introduction[];
+  debriefs: Debrief[];
 }
 
 const FILE = path.join(process.cwd(), ".data", "demo.json");
@@ -59,6 +61,8 @@ async function load(): Promise<DemoState> {
       bookings: s.bookings ?? [],
       networkProfiles: [],
       referrals: [],
+      introductions: s.introductions ?? [],
+      debriefs: s.debriefs ?? [],
     };
   }
 }
@@ -122,6 +126,8 @@ export class DemoRepo implements Repo {
       feedback,
       bookingTypes: s.bookingTypes,
       bookings: s.bookings,
+      introductions: s.introductions,
+      debriefs: s.debriefs,
     };
   }
 
@@ -141,7 +147,9 @@ export class DemoRepo implements Repo {
       .flatMap((i) => {
         const c = s.candidates.find((x) => x.id === i.candidateId);
         if (!c) return [];
-        // Note what is *not* copied across: privateNote, source, ig, consent.
+        const intro = s.introductions.find((x) => x.rosterItemId === i.id);
+        // Note what is *not* copied across: privateNote, source, ig, consent,
+        // and any debrief that is not the client's own.
         return [{
           id: i.id,
           cityId: i.cityId,
@@ -156,6 +164,12 @@ export class DemoRepo implements Repo {
           feedback: feedbackByItem.get(i.id) ?? {
             rosterItemId: i.id, reaction: null, note: "", updatedAt: null,
           },
+          introduction: intro ?? null,
+          // Only voice 'client'. Her account is never assembled into this view,
+          // which is the same rule the RLS policy enforces in production.
+          myDebrief: intro
+            ? s.debriefs.find((d) => d.introductionId === intro.id && d.voice === "client") ?? null
+            : null,
         }];
       });
 
@@ -225,6 +239,10 @@ export class DemoRepo implements Repo {
     await mutate((s) => {
       s.rosterItems = s.rosterItems.filter((i) => i.id !== id);
       s.feedback = s.feedback.filter((f) => f.rosterItemId !== id);
+      const introIds = new Set(
+        s.introductions.filter((x) => x.rosterItemId === id).map((x) => x.id));
+      s.introductions = s.introductions.filter((x) => x.rosterItemId !== id);
+      s.debriefs = s.debriefs.filter((d) => !introIds.has(d.introductionId));
     });
   }
 
@@ -355,6 +373,52 @@ export class DemoRepo implements Repo {
       if (patch.reaction !== undefined) f.reaction = patch.reaction;
       if (patch.note !== undefined) f.note = patch.note;
       f.updatedAt = new Date().toISOString();
+    });
+  }
+
+  async logIntroduction(rosterItemId: string, metAt: string | null) {
+    let id = "";
+    await mutate((s) => {
+      const existing = s.introductions.find((x) => x.rosterItemId === rosterItemId);
+      if (existing) {
+        if (metAt !== null) existing.metAt = metAt;
+        id = existing.id;
+        return;
+      }
+      id = randomUUID();
+      s.introductions.push({
+        id, agencyId: s.agency.id, rosterItemId, bookingId: null,
+        metAt: metAt ?? new Date().toISOString(),
+      });
+    });
+    return id;
+  }
+
+  async saveDebrief(input: {
+    introductionId: string;
+    voice: DebriefVoice;
+    authorKind: Debrief["authorKind"];
+    provenance: Debrief["provenance"];
+    disposition?: DispositionKey | null;
+    body?: string;
+  }) {
+    await mutate((s) => {
+      // One account per voice; editing updates in place rather than stacking.
+      let d = s.debriefs.find(
+        (x) => x.introductionId === input.introductionId && x.voice === input.voice);
+      if (!d) {
+        d = {
+          id: randomUUID(), introductionId: input.introductionId, agencyId: s.agency.id,
+          authorKind: input.authorKind, authorId: null, voice: input.voice,
+          provenance: input.provenance, disposition: null, body: "", updatedAt: null,
+        };
+        s.debriefs.push(d);
+      }
+      if (input.disposition !== undefined) d.disposition = input.disposition;
+      if (input.body !== undefined) d.body = input.body;
+      d.authorKind = input.authorKind;
+      d.provenance = input.provenance;
+      d.updatedAt = new Date().toISOString();
     });
   }
 

@@ -1,7 +1,7 @@
 import type {
-  Agency, Booking, BookingType, Candidate, City, Client, ClientFeedback, Member,
-  NetworkProfile, PortalRosterItem, ReferralRequest, Roster, RosterItem, StatusKey,
-  ReactionKey, Brand,
+  Agency, Booking, BookingType, Candidate, City, Client, ClientFeedback, Debrief,
+  DebriefVoice, DispositionKey, Introduction, Member, NetworkProfile, PortalRosterItem,
+  ReferralRequest, Roster, RosterItem, StatusKey, ReactionKey, Brand,
 } from "@/lib/types";
 
 /** Everything the matchmaker workspace needs, in one round trip. */
@@ -19,6 +19,9 @@ export interface Workspace {
   feedback: Record<string, ClientFeedback>;
   bookingTypes: BookingType[];
   bookings: Booking[];
+  introductions: Introduction[];
+  /** Every voice. The portal never receives this array. */
+  debriefs: Debrief[];
 }
 
 /**
@@ -75,6 +78,23 @@ export interface Repo {
 
   // --- portal (client) ---
   setFeedback(rosterItemId: string, patch: { reaction?: ReactionKey | null; note?: string }): Promise<void>;
+
+  // --- debrief (ADR-007) ---
+  /** Records that the introduction happened. Idempotent per roster item. */
+  logIntroduction(rosterItemId: string, metAt: string | null): Promise<string>;
+  /**
+   * Upserts one account of one evening. `voice` decides whose account it is,
+   * which is not the same as who typed it: a matchmaker writing up what the
+   * candidate told her passes voice 'candidate' with provenance 'relayed'.
+   */
+  saveDebrief(input: {
+    introductionId: string;
+    voice: DebriefVoice;
+    authorKind: Debrief["authorKind"];
+    provenance: Debrief["provenance"];
+    disposition?: DispositionKey | null;
+    body?: string;
+  }): Promise<void>;
 
   // --- settings ---
   updateBrand(agencyId: string, brand: Brand): Promise<void>;

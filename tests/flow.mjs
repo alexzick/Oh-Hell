@@ -100,6 +100,52 @@ await p.goto(`${B}/portal/${newId}`, { waitUntil: "networkidle" });
 check("shared roster appears in the portal",
   (await p.locator("body").innerText()).includes("Stephanie C"));
 
+// 9 — the debrief, and the wall between the two accounts of one evening
+await p.goto(`${B}/app/clients/${CID}/${ITEM}`, { waitUntil: "networkidle" });
+await p.getByRole("button", { name: "They met" }).click();
+await p.waitForTimeout(1200);
+check("introduction logged", store().introductions.length === 1);
+const introId = store().introductions[0].id;
+
+// the matchmaker writes up her side and their own read, both with canaries
+await p.reload({ waitUntil: "networkidle" });
+await p.getByLabel(`${"Stephanie C"}'s account`).fill("CANARY-her-account-do-not-leak");
+await p.getByLabel("Your read").fill("CANARY-own-read-do-not-leak");
+await p.waitForTimeout(1400);
+
+// the client writes his, in his portal
+await p.goto(`${B}/portal/${CID}/${ITEM}`, { waitUntil: "networkidle" });
+await p.getByRole("button", { name: /Would see again/ }).click();
+await p.getByLabel("How the date went").fill("Genuinely good evening, I'd like a second.");
+await p.waitForTimeout(1500);
+
+const afterDebrief = await p.content();
+check("her relayed account absent from the portal", !afterDebrief.includes("CANARY-her-account"));
+check("matchmaker's own read absent from the portal", !afterDebrief.includes("CANARY-own-read"));
+
+const voices = store().debriefs.filter((d) => d.introductionId === introId);
+check("three voices recorded", voices.length === 3);
+check("client's account is first-hand",
+  voices.find((d) => d.voice === "client")?.provenance === "stated");
+check("her account is marked relayed, not stated",
+  voices.find((d) => d.voice === "candidate")?.provenance === "relayed");
+
+// the matchmaker sees his account, and the disagreement is surfaced
+await p.goto(`${B}/app/clients/${CID}/${ITEM}`, { waitUntil: "networkidle" });
+const editorBody = await p.locator("body").innerText();
+check("client's account reaches the matchmaker",
+  editorBody.includes("Genuinely good evening"));
+
+await p.getByLabel("Stephanie C's account").scrollIntoViewIfNeeded();
+await p.locator(".chip", { hasText: "Not a match" }).nth(1).click();
+await p.waitForTimeout(1200);
+await p.reload({ waitUntil: "networkidle" });
+const divergenceText = await p.locator("body").innerText();
+check("divergent outcome is surfaced",
+  /They don.t agree/.test(divergenceText));
+check("divergence names both answers",
+  /would see again/i.test(divergenceText) && /not a match/i.test(divergenceText));
+
 console.log("PASS\n  " + ok.join("\n  "));
 if (fail.length) console.log("FAIL\n  " + fail.join("\n  "));
 console.log(`\n${ok.length} passed, ${fail.length} failed`);

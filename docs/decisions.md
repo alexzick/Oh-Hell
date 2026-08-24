@@ -125,3 +125,49 @@ opacity.
 **Consequences.** It should become a brand/settings toggle before the second
 tenant, since not every matchmaker will want a client seeing "Passed" against a
 real person's photo. Filed, not built.
+
+---
+
+## ADR-007 — Post-date intelligence: prose is the record, structure is derived
+
+**Context.** After an introduction there is intelligence worth capturing, and it
+arrives as three or four hurried sentences. A form would collect the checkboxes
+and lose the sentences, and the sentences are where the value is. But
+unstructured text alone can't be queried, compared or learned from.
+
+**Decision.** `debrief.body` is written by a person and never rewritten by the
+system. Structure is derived from it into `debrief_claim` — facet, dimension,
+valence — and is not committed until a human accepts it. Claims are disposable
+and recomputable; the prose is not.
+
+One structured field is demanded at capture time: `disposition`
+(`continue` / `decline` / `unsure` / `no_contact`). It is the training label for
+everything else and it costs one tap.
+
+Three further rules, all cheap now and unrecoverable later:
+
+1. **Two accounts, not one.** Every introduction has a client's account and a
+   candidate's. The disagreement between them is the highest-value signal the
+   business produces, and it is only computable if both exist. Capturing only
+   the client's side builds something that learns one person's taste and treats
+   the other as inventory.
+2. **Every claim carries provenance, subject, confidence and span.** `voice`
+   records whose account it is; `author_kind` records who typed it. Candidates
+   have no accounts yet, so hers is `relayed` — and a system that cannot tell
+   "she said this" from "we think this" will eventually tell a client the wrong
+   one.
+3. **Safety is not a facet.** `safety_report` is a separate table with separate
+   policies and no path into ranking. "She wasn't into him" and "he wouldn't let
+   her leave" must not travel down the same pipe.
+
+**Consequences.** Extraction is deliberately not built yet — the ontology in
+`docs/ontology.md` is a hypothesis, and the right time to fix it is after fifty
+real debriefs have been read, not before the first. Until then the app collects
+prose and one enum, which is enough to be useful on its own and is what every
+later model will train on.
+
+Two things to settle before this goes live: how long a conduct or chemistry
+claim about a person should live before it ages out or collapses into an
+aggregate, and the legal posture of opinions held *about* someone — a debrief is
+written by one person about another who never agreed to it, which is a different
+situation from the notes already in the system.

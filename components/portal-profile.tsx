@@ -2,11 +2,11 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import type { PortalRosterItem, ReactionKey } from "@/lib/types";
-import { REACTION, REACTION_KEYS, STATUS } from "@/lib/types";
+import type { DispositionKey, PortalRosterItem, ReactionKey } from "@/lib/types";
+import { DISPOSITION, DISPOSITION_KEYS, REACTION, REACTION_KEYS, STATUS } from "@/lib/types";
 import { photoStyle, EmptyPhoto } from "@/components/photo";
 import { useAutosave } from "@/lib/use-autosave";
-import { setFeedbackAction } from "@/lib/actions";
+import { saveClientDebriefAction, setFeedbackAction } from "@/lib/actions";
 
 export function PortalProfile({ clientId, clientName, item, confidentialityNote }: {
   clientId: string;
@@ -15,9 +15,12 @@ export function PortalProfile({ clientId, clientName, item, confidentialityNote 
   confidentialityNote: string;
 }) {
   const [reaction, setReaction] = useState<ReactionKey | null>(item.feedback.reaction);
+  const [disposition, setDisposition] =
+    useState<DispositionKey | null>(item.myDebrief?.disposition ?? null);
   const [, startTransition] = useTransition();
   const { save, state } = useAutosave();
   const c = item.candidate;
+  const intro = item.introduction;
 
   const facts: [string, string][] = [
     ["Age", c.age], ["Based in", c.basedIn], ["Profession", c.profession], ["Faith", c.faith],
@@ -72,7 +75,7 @@ export function PortalProfile({ clientId, clientName, item, confidentialityNote 
         <hr className="hr" />
 
         <div className="eyebrow" style={{ letterSpacing: "0.22em", marginBottom: 14 }}>
-          What do you think?
+          {intro ? "Before you met" : "What do you think?"}
         </div>
         <div className="reactions">
           {REACTION_KEYS.map((key) => {
@@ -106,6 +109,51 @@ export function PortalProfile({ clientId, clientName, item, confidentialityNote 
                   aria-label="Your notes"
                   placeholder="Your thoughts — what you'd like us to know, questions, whether you'd like to meet…"
                   onChange={(e) => save("note", () => setFeedbackAction(item.id, { note: e.target.value }))} />
+
+        {intro && (
+          <>
+            <hr className="hr" />
+            <div className="eyebrow" style={{ letterSpacing: "0.22em", marginBottom: 6 }}>
+              How did it go?
+            </div>
+            <p style={{
+              fontFamily: "var(--serif)", fontStyle: "italic", fontSize: 13,
+              color: "var(--text-muted)", margin: "0 0 16px",
+            }}>
+              Only your matchmaker sees this. {c.name} never does — and you won&rsquo;t see hers.
+            </p>
+
+            <div className="reactions">
+              {DISPOSITION_KEYS.map((key) => {
+                const active = disposition === key;
+                const d = DISPOSITION[key];
+                return (
+                  <button key={key} className="reaction-btn" data-active={active}
+                          style={active
+                            ? { borderColor: d.color, background: `${d.color}14` }
+                            : undefined}
+                          onClick={() => {
+                            const next = active ? null : key;
+                            setDisposition(next);
+                            startTransition(() => {
+                              void saveClientDebriefAction(intro.id, { disposition: next });
+                            });
+                          }}>
+                    <span className="label" style={{ color: d.color }}>{d.label}</span>
+                    <span className="verb">{d.hint}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            <textarea className="textarea" rows={4} style={{ marginTop: 16 }}
+                      defaultValue={item.myDebrief?.body ?? ""}
+                      aria-label="How the date went"
+                      placeholder="Anything you want us to know — what worked, what didn't, what you'd want next time…"
+                      onChange={(e) => save("debrief", () =>
+                        saveClientDebriefAction(intro.id, { body: e.target.value }))} />
+          </>
+        )}
 
         <p className="confidentiality">{confidentialityNote}</p>
       </div>
