@@ -10,13 +10,31 @@ is left to do.
 | Supabase project | `unicorn-club` (`ujuddtskztldeegvdgnn`), org `Zick`, region `us-east-2` |
 | API URL | `https://ujuddtskztldeegvdgnn.supabase.co` |
 | Migrations applied | `0001_schema`, `0002_rls`, `0003_debrief`, `0004_auth_binding` |
-| Seeded | 1 agency, 1 client (Patrick), 19 candidates, 19 roster items, 3 private notes, 3 booking types |
+| Seeded | 1 agency, 2 owners (Emily, Alex), 1 client (Patrick), 19 candidates, 19 roster items, 3 private notes, 3 booking types |
 | Roster state | **draft** — nothing is visible to Patrick until Emily shares it |
 
-Verified after seeding: every table in `public` has row-level security enabled,
-and the `anon` role — which is what anyone holding the publishable key is —
-reads zero rows from `candidate`, `roster_item`, `roster_item_private`,
-`candidate_internal`, `client` and `agency`.
+## The confidentiality model, verified against the live database
+
+Every table in `public` has row-level security enabled. Sessions were then
+simulated inside a transaction that was rolled back, by binding a fake
+`auth_user_id` and setting `request.jwt.claims`, so these are the real policies
+answering real queries rather than an argument about what they should do:
+
+| Who is asking | candidates | roster items | private notes | internal rows |
+|---|---|---|---|---|
+| Anonymous — anyone with the publishable key | 0 | 0 | 0 | 0 |
+| Emily, signed in as a matchmaker | 19 | 19 | **3** | **19** |
+| Patrick, signed in, roster still a draft | 0 | 0 | 0 | 0 |
+| Patrick, signed in, roster shared | 19 | 19 | **0** | **0** |
+
+The last row is the one the product turns on. Patrick can see every candidate on
+his roster and cannot reach a single private note or internal field — not
+because a query filtered them out, but because no policy on those tables admits
+him. The row above it is the draft guarantee: nothing at all until Emily shares.
+
+To re-run this after changing any policy, see the transaction pattern in
+`docs/decisions.md` ADR-002 — bind a fake auth user, `set local role
+authenticated`, set the JWT claim, count, then `rollback`.
 
 ## Running against it
 
@@ -49,15 +67,9 @@ find out who is a client of the agency.
 
 ## Left to do
 
-1. **Emily's account.** `agency_member` is empty, so nobody can see anything
-   yet. It needs one row with her real email:
-
-   ```sql
-   insert into agency_member (agency_id, name, email, role)
-   values ('895283e1-7886-5868-89d0-b31a8b0dd695', 'Emily', '<her email>', 'owner');
-   ```
-
-   Then she requests a link at `/signin` and she's in.
+1. **First sign-in.** Two owner rows exist and are waiting to be claimed:
+   Emily (`emsterp@gmail.com`) and Alex (`anzick@gmail.com`). Neither has
+   signed in yet. Requesting a link at `/signin` binds the account to the row.
 
 2. **Email delivery.** Supabase's built-in SMTP is rate-limited and lands in
    spam often enough to matter. Before Patrick ever gets a link, point

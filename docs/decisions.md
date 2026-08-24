@@ -36,6 +36,22 @@ function returning an explicitly-written public type.
 
 **Consequences.** A leak requires someone to write a *new policy* on a private
 table, which is a conspicuous act, rather than to forget a column in a select.
+
+**How to check it.** Don't argue about what the policies do — ask them. Simulate
+a session inside a transaction and roll it back:
+
+```sql
+begin;
+update client set auth_user_id = '...fake uuid...' where name = 'Patrick';
+update roster set status = 'shared';
+set local role authenticated;
+set local request.jwt.claims = '{"sub":"...same uuid...","role":"authenticated"}';
+select (select count(*) from roster_item_private);  -- must be 0
+rollback;
+```
+
+Run this after touching any policy. Results as of the live deployment are in
+`docs/setup.md`.
 Postgres column-level grants were considered and rejected: grants are per-role,
 and matchmakers and clients are both `authenticated`, so a column grant that hid
 the note from clients would hide it from matchmakers too.
