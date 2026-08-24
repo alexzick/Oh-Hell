@@ -1,0 +1,703 @@
+{
+  "agency": {
+    "id": "895283e1-7886-5868-89d0-b31a8b0dd695",
+    "slug": "unicorn-club",
+    "name": "Unicorn Club",
+    "plan": "studio",
+    "brand": {
+      "displayName": "Unicorn Club",
+      "logoUrl": "/unicorn-club-logo.png",
+      "cream": "#F1EDE5",
+      "panel": "#F6F3EC",
+      "inputBg": "#F8F5EF",
+      "ink": "#1B1A17",
+      "text2": "#6b6457",
+      "textMuted": "#9a9486",
+      "serif": "Newsreader",
+      "sans": "Hanken Grotesk",
+      "confidentialityNote": "Confidential — please do not share under any circumstances."
+    },
+    "stripeCustomerId": null,
+    "stripeSubscriptionId": null,
+    "subscriptionStatus": "trialing",
+    "stripeConnectAccountId": null,
+    "connectChargesEnabled": false,
+    "applicationFeeBps": 500,
+    "networkEnabled": true
+  },
+  "members": [
+    {
+      "id": "117c2275-0241-56ba-a216-b226f7b746bc",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "authUserId": null,
+      "name": "Mags",
+      "email": "mags@unicornclub.example",
+      "role": "owner"
+    }
+  ],
+  "clients": [
+    {
+      "id": "fb877c7f-853d-5624-a3e1-aabd2a624f9c",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Patrick",
+      "email": null,
+      "authUserId": null,
+      "active": true
+    }
+  ],
+  "cities": [
+    {
+      "id": "84aefaf8-9715-55cd-85cb-33bfc8c9d496",
+      "clientId": "fb877c7f-853d-5624-a3e1-aabd2a624f9c",
+      "key": "new-york",
+      "label": "New York",
+      "position": 0
+    },
+    {
+      "id": "bbe7afe2-b92e-55ad-9958-c375f5b09ea9",
+      "clientId": "fb877c7f-853d-5624-a3e1-aabd2a624f9c",
+      "key": "miami",
+      "label": "Miami",
+      "position": 1
+    },
+    {
+      "id": "1fc853cc-c704-569a-87d1-df3e99724bf3",
+      "clientId": "fb877c7f-853d-5624-a3e1-aabd2a624f9c",
+      "key": "los-angeles",
+      "label": "Los Angeles",
+      "position": 2
+    },
+    {
+      "id": "0dce2cdd-ae00-58f0-8394-5a1ef543dc29",
+      "clientId": "fb877c7f-853d-5624-a3e1-aabd2a624f9c",
+      "key": "elsewhere-abroad",
+      "label": "Elsewhere/Abroad",
+      "position": 3
+    },
+    {
+      "id": "9d07fac3-d6a3-591d-9cf2-fbe82e6b5933",
+      "clientId": "fb877c7f-853d-5624-a3e1-aabd2a624f9c",
+      "key": "prior-partners",
+      "label": "Prior Partners",
+      "position": 4
+    }
+  ],
+  "candidates": [
+    {
+      "id": "d0663f5a-75c3-576a-9c7c-7a5d75b881bd",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Stephanie C",
+      "age": "35",
+      "basedIn": "New York",
+      "profession": "Operations @ VC Firm",
+      "faith": "Christian",
+      "about": "Stephanie is smart, beautiful, and confident, with a natural poise and outgoing energy. She recently moved back to New York for her role at a VC firm. She knows what she's looking for and is clear that she wants a family.",
+      "photoUrl": null,
+      "photoFrame": null,
+      "networkListed": false,
+      "consentVersion": null,
+      "consentAt": null
+    },
+    {
+      "id": "12e795b7-274b-5e26-bb3b-6ce22cb807aa",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Selin U",
+      "age": "30",
+      "basedIn": "New York",
+      "profession": "Business Program Manager",
+      "faith": "Christian",
+      "about": "Raised in Northern Virginia with deep Turkish family roots, Selin leads strategic technology initiatives remotely and graduated at the top of her class. Outside work she balances tennis, Sunday baking, yoga, and photography with a love of classic literature and travel. Friends call her thoughtful, adventurous, and graceful. Height 5'7\". Looking for someone kind, ambitious, and ready to build a real connection.",
+      "photoUrl": null,
+      "photoFrame": null,
+      "networkListed": false,
+      "consentVersion": null,
+      "consentAt": null
+    },
+    {
+      "id": "4b7b7d51-15e7-561e-9be7-e75c157bc690",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Katya D",
+      "age": "30",
+      "basedIn": "Miami",
+      "profession": "Profile Miami Co-Founder & Development Sales",
+      "faith": "Christian",
+      "about": "Katya grew up in LA and moved to New York (her father has a senior role at a hedgefund) and she is in NYC semi often for work. Open to moving back to the city especially because her family is so close. She has an infectious happy energy and is a talented person - she plays piano, sings and",
+      "photoUrl": null,
+      "photoFrame": null,
+      "networkListed": false,
+      "consentVersion": null,
+      "consentAt": null
+    },
+    {
+      "id": "7ea0eb8b-117f-5dee-a5b1-df32e29f1633",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Sabrina S",
+      "age": "33",
+      "basedIn": "New York",
+      "profession": "Founder, luxury travel consultancy (superyacht charters)",
+      "faith": "",
+      "about": "Sabrina grew up immersed in the yachting world as the daughter of a well-known yachting journalist, and has built her own boutique consultancy managing global travel for private charter clients. She's known for creating unforgettable experiences. Discerning, resourceful, and composed, she brings taste and intuition to everything she does.",
+      "photoUrl": null,
+      "photoFrame": null,
+      "networkListed": false,
+      "consentVersion": null,
+      "consentAt": null
+    },
+    {
+      "id": "3f41f84a-8bc8-533a-b9e7-8818be3f3cf6",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Morgan D",
+      "age": "29",
+      "basedIn": "New York City",
+      "profession": "Civil Engineer",
+      "faith": "Catholic",
+      "about": "Kind, smart and just a solid person overall. She has her own career and life but is commitment oriented and ready for family. Referred by a very close friend and waiting to interview her upon request.",
+      "photoUrl": null,
+      "photoFrame": null,
+      "networkListed": false,
+      "consentVersion": null,
+      "consentAt": null
+    },
+    {
+      "id": "54fabef1-8614-5d50-9454-93783338d937",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Sofia S",
+      "age": "24",
+      "basedIn": "New York",
+      "profession": "DJ & Model",
+      "faith": "Christian",
+      "about": "Sofia is hard working, from a nice family and knows how to have fun. Only recently single. Maybe not the right type but has a sizable network of friends her age.",
+      "photoUrl": null,
+      "photoFrame": null,
+      "networkListed": false,
+      "consentVersion": null,
+      "consentAt": null
+    },
+    {
+      "id": "b2bb91f3-8fc2-50c4-a4e1-baa837d525ef",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Madison",
+      "age": "31",
+      "basedIn": "New York",
+      "profession": "Attorney",
+      "faith": "",
+      "about": "Madison is an attorney and native New Yorker. She loves travel and adventure and is an avid NYC sports fan. Family is central to her life and she's especially close with her older brothers, nieces, and nephews. She loves a dance floor. Height 5'6\".",
+      "photoUrl": null,
+      "photoFrame": null,
+      "networkListed": false,
+      "consentVersion": null,
+      "consentAt": null
+    },
+    {
+      "id": "5ab5b034-8486-5917-8851-528b5e0a95a4",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Solenne \"Twiga\"",
+      "age": "30",
+      "basedIn": "Miami",
+      "profession": "Material Good",
+      "faith": "Catholic",
+      "about": "Former successful natural red head model. (Her look is not for everyone but she is a very unique beauty.) Innate sense of style. Senior at Material Good. Equestrian.",
+      "photoUrl": null,
+      "photoFrame": null,
+      "networkListed": false,
+      "consentVersion": null,
+      "consentAt": null
+    },
+    {
+      "id": "00991521-7dd9-5ec4-bde1-c8dd58dbd7c7",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Bailey T",
+      "age": "28",
+      "basedIn": "Los Angeles",
+      "profession": "Photographer",
+      "faith": "Christian",
+      "about": "Frequently in NYC for work but based in LA. Would move for the right person. Bailey is a natural beauty and real talent. Sober",
+      "photoUrl": null,
+      "photoFrame": null,
+      "networkListed": false,
+      "consentVersion": null,
+      "consentAt": null
+    },
+    {
+      "id": "02607c36-113b-51a7-9a8d-1a696af86388",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Erica",
+      "age": "33",
+      "basedIn": "Los Angeles",
+      "profession": "Tech founder & angel investor",
+      "faith": "Christian",
+      "about": "A former Miss New York turned tech founder, strategist, and angel investor, Erica pairs a powerful résumé with an equally powerful heart. Originally from the Midwest, she brings grace, warmth, and depth to everything she touches. She mentors youth, hosts a wellness podcast, and is an accomplished tri-athlete — riding horses, curating art, or deep in a new book, she lives with intention. Height 5'6\". She's ready for a partner who values strength, softness, and a shared vision for a beautiful life.",
+      "photoUrl": null,
+      "photoFrame": null,
+      "networkListed": false,
+      "consentVersion": null,
+      "consentAt": null
+    },
+    {
+      "id": "19ecdc70-5347-5d15-b961-df39e7e0376b",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Ashleigh S",
+      "age": "37",
+      "basedIn": "Miami",
+      "profession": "Dermatologist",
+      "faith": "Jewish - not religious",
+      "about": "Ashleigh is very family oriented, has accomplished a lot professionally and would be willing to relocate for the right person. She is tall (5'10\") curvy and beautiful,",
+      "photoUrl": null,
+      "photoFrame": null,
+      "networkListed": false,
+      "consentVersion": null,
+      "consentAt": null
+    },
+    {
+      "id": "6245e4f4-b012-5fab-a2c2-7ec1c3f7645f",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Sandra W",
+      "age": "33",
+      "basedIn": "New York City",
+      "profession": "Director, screenwriter & photographer",
+      "faith": "",
+      "about": "Sandra is a Danish director, screenwriter, and photographer based in New York. Her debut feature Lowland Kids, produced by Darren Aronofsky's Protozoa Pictures, premiered at CPH:DOX, with a theatrical release coming in 2026. Her documentary A New Wave ran as a New York Times Op-Doc in 2024.",
+      "photoUrl": null,
+      "photoFrame": null,
+      "networkListed": false,
+      "consentVersion": null,
+      "consentAt": null
+    },
+    {
+      "id": "c689e68b-beed-5320-bfe8-98afe53113d4",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Johanna D",
+      "age": "38",
+      "basedIn": "Miami",
+      "profession": "Head of retail Ventures @ Starwood and co-owner of furniture, home and lifestyle brand",
+      "faith": "Jewish",
+      "about": "You wouldn't expect someone as effortlessly chic as Johanna to also be so approachable and kind. She is a very passionate woman. A few years older than ideal so will hold for now.\n\nhttps://sheerluxe.com/ultraluxe/ransom-and-dunn",
+      "photoUrl": null,
+      "photoFrame": null,
+      "networkListed": false,
+      "consentVersion": null,
+      "consentAt": null
+    },
+    {
+      "id": "f0231e4b-77c0-523b-a4e2-9efe788de2a9",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Danna H",
+      "age": "30",
+      "basedIn": "Miami",
+      "profession": "Former Ms. Puerto Rico, influencer",
+      "faith": "Catholic",
+      "about": "",
+      "photoUrl": null,
+      "photoFrame": null,
+      "networkListed": false,
+      "consentVersion": null,
+      "consentAt": null
+    },
+    {
+      "id": "126374d1-5936-5865-aee4-caaaff13b991",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Natalia",
+      "age": "35",
+      "basedIn": "New York",
+      "profession": "Real Estate",
+      "faith": "",
+      "about": "Real estate professional based in NYC, but passing for now because though she filled out the questionnaire she hasn't responded to me yet.",
+      "photoUrl": null,
+      "photoFrame": null,
+      "networkListed": false,
+      "consentVersion": null,
+      "consentAt": null
+    },
+    {
+      "id": "20e51392-4a5f-5e0d-b5ed-408aa3d31e46",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Monica M",
+      "age": "33",
+      "basedIn": "Miami",
+      "profession": "Producer",
+      "faith": "Christian",
+      "about": "Bilingual",
+      "photoUrl": null,
+      "photoFrame": null,
+      "networkListed": false,
+      "consentVersion": null,
+      "consentAt": null
+    },
+    {
+      "id": "010d5fde-c563-5976-9089-d6a498204e88",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Micaela E",
+      "age": "39",
+      "basedIn": "New York City",
+      "profession": "Stylist",
+      "faith": "Christian",
+      "about": "Amazing person at the top of her game professionally. Just turned 40 so likely too old but she is lovely. Eager to have a family.\n\nhttps://micaelaerlanger.com/about/",
+      "photoUrl": null,
+      "photoFrame": null,
+      "networkListed": false,
+      "consentVersion": null,
+      "consentAt": null
+    },
+    {
+      "id": "44f5148e-50bf-5278-8798-8e5a494470c4",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Allyson Sabbagh",
+      "age": "",
+      "basedIn": "New York",
+      "profession": "Real Estate & Investor",
+      "faith": "Jewish",
+      "about": "",
+      "photoUrl": null,
+      "photoFrame": null,
+      "networkListed": false,
+      "consentVersion": null,
+      "consentAt": null
+    },
+    {
+      "id": "955eb6bd-6d1b-5961-b7b0-52e6b57ae386",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Sydney K",
+      "age": "",
+      "basedIn": "New York",
+      "profession": "",
+      "faith": "",
+      "about": "",
+      "photoUrl": null,
+      "photoFrame": null,
+      "networkListed": false,
+      "consentVersion": null,
+      "consentAt": null
+    }
+  ],
+  "candidateInternal": [
+    {
+      "candidateId": "d0663f5a-75c3-576a-9c7c-7a5d75b881bd",
+      "ig": "",
+      "source": ""
+    },
+    {
+      "candidateId": "12e795b7-274b-5e26-bb3b-6ce22cb807aa",
+      "ig": "",
+      "source": "Steph Chubin"
+    },
+    {
+      "candidateId": "4b7b7d51-15e7-561e-9be7-e75c157bc690",
+      "ig": "",
+      "source": "know personally"
+    },
+    {
+      "candidateId": "7ea0eb8b-117f-5dee-a5b1-df32e29f1633",
+      "ig": "",
+      "source": ""
+    },
+    {
+      "candidateId": "3f41f84a-8bc8-533a-b9e7-8818be3f3cf6",
+      "ig": "@morgansdownie",
+      "source": "Keith George"
+    },
+    {
+      "candidateId": "54fabef1-8614-5d50-9454-93783338d937",
+      "ig": "",
+      "source": ""
+    },
+    {
+      "candidateId": "b2bb91f3-8fc2-50c4-a4e1-baa837d525ef",
+      "ig": "",
+      "source": "Beth Mandell/ Lisa Clampitt"
+    },
+    {
+      "candidateId": "5ab5b034-8486-5917-8851-528b5e0a95a4",
+      "ig": "",
+      "source": ""
+    },
+    {
+      "candidateId": "00991521-7dd9-5ec4-bde1-c8dd58dbd7c7",
+      "ig": "",
+      "source": "Questionnaire"
+    },
+    {
+      "candidateId": "02607c36-113b-51a7-9a8d-1a696af86388",
+      "ig": "",
+      "source": ""
+    },
+    {
+      "candidateId": "19ecdc70-5347-5d15-b961-df39e7e0376b",
+      "ig": "",
+      "source": ""
+    },
+    {
+      "candidateId": "6245e4f4-b012-5fab-a2c2-7ec1c3f7645f",
+      "ig": "@sandrawinther",
+      "source": "Anna Shimonis"
+    },
+    {
+      "candidateId": "c689e68b-beed-5320-bfe8-98afe53113d4",
+      "ig": "",
+      "source": ""
+    },
+    {
+      "candidateId": "f0231e4b-77c0-523b-a4e2-9efe788de2a9",
+      "ig": "",
+      "source": ""
+    },
+    {
+      "candidateId": "126374d1-5936-5865-aee4-caaaff13b991",
+      "ig": "",
+      "source": ""
+    },
+    {
+      "candidateId": "20e51392-4a5f-5e0d-b5ed-408aa3d31e46",
+      "ig": "",
+      "source": "Know personally"
+    },
+    {
+      "candidateId": "010d5fde-c563-5976-9089-d6a498204e88",
+      "ig": "",
+      "source": ""
+    },
+    {
+      "candidateId": "44f5148e-50bf-5278-8798-8e5a494470c4",
+      "ig": "",
+      "source": ""
+    },
+    {
+      "candidateId": "955eb6bd-6d1b-5961-b7b0-52e6b57ae386",
+      "ig": "",
+      "source": ""
+    }
+  ],
+  "rosters": [
+    {
+      "id": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "clientId": "fb877c7f-853d-5624-a3e1-aabd2a624f9c",
+      "title": "Introductions",
+      "status": "shared",
+      "sharedAt": "2026-08-21T12:00:00Z"
+    }
+  ],
+  "rosterItems": [
+    {
+      "id": "e64a9d01-23b1-5a2d-9e64-6784a9f22fca",
+      "rosterId": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "candidateId": "d0663f5a-75c3-576a-9c7c-7a5d75b881bd",
+      "cityId": "84aefaf8-9715-55cd-85cb-33bfc8c9d496",
+      "status": "maybe",
+      "blurb": "Smart, beautiful, just moved back to NYC.",
+      "privateNote": "",
+      "position": 0
+    },
+    {
+      "id": "d92684ee-46a3-5a47-b36a-0d4e6a2dd947",
+      "rosterId": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "candidateId": "12e795b7-274b-5e26-bb3b-6ce22cb807aa",
+      "cityId": "84aefaf8-9715-55cd-85cb-33bfc8c9d496",
+      "status": "maybe",
+      "blurb": "Sophisticated and playful, with depth — thoughtful, adventurous and graceful.",
+      "privateNote": "",
+      "position": 1
+    },
+    {
+      "id": "cd0e363c-642c-5f3e-8945-5e3fd50117dd",
+      "rosterId": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "candidateId": "4b7b7d51-15e7-561e-9be7-e75c157bc690",
+      "cityId": "bbe7afe2-b92e-55ad-9958-c375f5b09ea9",
+      "status": "hold",
+      "blurb": "Talented, warm, smart, down to earth, petite, curvy, hilarious.",
+      "privateNote": "",
+      "position": 2
+    },
+    {
+      "id": "bedd3a05-df95-5ae5-96a2-39792d3e1585",
+      "rosterId": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "candidateId": "7ea0eb8b-117f-5dee-a5b1-df32e29f1633",
+      "cityId": "84aefaf8-9715-55cd-85cb-33bfc8c9d496",
+      "status": "maybe",
+      "blurb": "Worldly and resourceful, with an insider's eye for the extraordinary.",
+      "privateNote": "Background per Forbes profile (Aug 2025), \"The Superyacht Lifestyle Architect.\"",
+      "position": 3
+    },
+    {
+      "id": "1e94c2ad-8491-5587-a81b-41adb748bb07",
+      "rosterId": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "candidateId": "3f41f84a-8bc8-533a-b9e7-8818be3f3cf6",
+      "cityId": "84aefaf8-9715-55cd-85cb-33bfc8c9d496",
+      "status": "maybe",
+      "blurb": "Adorable, successful and ready for true partnership.",
+      "privateNote": "",
+      "position": 4
+    },
+    {
+      "id": "63280d3b-538a-5dd5-bfc9-d8a7f61e128a",
+      "rosterId": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "candidateId": "54fabef1-8614-5d50-9454-93783338d937",
+      "cityId": "84aefaf8-9715-55cd-85cb-33bfc8c9d496",
+      "status": "maybe",
+      "blurb": "Sweet, beautiful, friendly and cool.",
+      "privateNote": "",
+      "position": 5
+    },
+    {
+      "id": "b2fae496-460d-569d-8d0b-1b9ae834a44f",
+      "rosterId": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "candidateId": "b2bb91f3-8fc2-50c4-a4e1-baa837d525ef",
+      "cityId": "84aefaf8-9715-55cd-85cb-33bfc8c9d496",
+      "status": "maybe",
+      "blurb": "Kind, smart, and outgoing — a native New Yorker attorney with a big heart for family and friends.",
+      "privateNote": "",
+      "position": 6
+    },
+    {
+      "id": "9c0f1067-d228-5fde-95ea-614c77da2a3d",
+      "rosterId": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "candidateId": "5ab5b034-8486-5917-8851-528b5e0a95a4",
+      "cityId": "bbe7afe2-b92e-55ad-9958-c375f5b09ea9",
+      "status": "hold",
+      "blurb": "Smart, unique, sophisticated French girl in Miami.",
+      "privateNote": "Miami based so unsure",
+      "position": 7
+    },
+    {
+      "id": "c684b2f1-5a55-5cf4-b529-b6a03cea2da6",
+      "rosterId": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "candidateId": "00991521-7dd9-5ec4-bde1-c8dd58dbd7c7",
+      "cityId": "1fc853cc-c704-569a-87d1-df3e99724bf3",
+      "status": "hold",
+      "blurb": "down to earth, sweet natured professional photographer. Frequently in nyc",
+      "privateNote": "",
+      "position": 8
+    },
+    {
+      "id": "ca4acbed-62a3-5bd6-bab6-3bbcf6b1c4f9",
+      "rosterId": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "candidateId": "02607c36-113b-51a7-9a8d-1a696af86388",
+      "cityId": "1fc853cc-c704-569a-87d1-df3e99724bf3",
+      "status": "hold",
+      "blurb": "Feminine, sophisticated, and driven — a former Miss New York turned tech founder with real depth of character.",
+      "privateNote": "From Beth Mandell/ Lisa Clampit",
+      "position": 9
+    },
+    {
+      "id": "7fd72cc1-a90b-583c-8c60-b0d999af21c5",
+      "rosterId": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "candidateId": "19ecdc70-5347-5d15-b961-df39e7e0376b",
+      "cityId": "bbe7afe2-b92e-55ad-9958-c375f5b09ea9",
+      "status": "maybe",
+      "blurb": "Unicorn doctor",
+      "privateNote": "",
+      "position": 10
+    },
+    {
+      "id": "e5960232-7f11-5d83-8735-9aac1cb70fb6",
+      "rosterId": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "candidateId": "6245e4f4-b012-5fab-a2c2-7ec1c3f7645f",
+      "cityId": "84aefaf8-9715-55cd-85cb-33bfc8c9d496",
+      "status": "passed",
+      "blurb": "A Danish filmmaker with a bold, cinematic eye.",
+      "privateNote": "",
+      "position": 11
+    },
+    {
+      "id": "d30c3413-1e71-559e-b887-297b4f829492",
+      "rosterId": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "candidateId": "c689e68b-beed-5320-bfe8-98afe53113d4",
+      "cityId": "bbe7afe2-b92e-55ad-9958-c375f5b09ea9",
+      "status": "hold",
+      "blurb": "True badass: smart, beautiful, petite, successful.",
+      "privateNote": "",
+      "position": 12
+    },
+    {
+      "id": "d8894519-e616-5866-96a4-a085e878d3db",
+      "rosterId": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "candidateId": "f0231e4b-77c0-523b-a4e2-9efe788de2a9",
+      "cityId": "bbe7afe2-b92e-55ad-9958-c375f5b09ea9",
+      "status": "hold",
+      "blurb": "",
+      "privateNote": "",
+      "position": 13
+    },
+    {
+      "id": "d1ccb6e3-4d60-51fd-bcda-dae0c1c93d93",
+      "rosterId": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "candidateId": "126374d1-5936-5865-aee4-caaaff13b991",
+      "cityId": "84aefaf8-9715-55cd-85cb-33bfc8c9d496",
+      "status": "passed",
+      "blurb": "",
+      "privateNote": "",
+      "position": 14
+    },
+    {
+      "id": "6084bb3b-71ab-5c27-953f-37d49bb76987",
+      "rosterId": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "candidateId": "20e51392-4a5f-5e0d-b5ed-408aa3d31e46",
+      "cityId": "bbe7afe2-b92e-55ad-9958-c375f5b09ea9",
+      "status": "passed",
+      "blurb": "Smart, quick witted, sophisticated.",
+      "privateNote": "",
+      "position": 15
+    },
+    {
+      "id": "ed5f4f9d-4c2d-528e-9602-1e1eee243353",
+      "rosterId": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "candidateId": "010d5fde-c563-5976-9089-d6a498204e88",
+      "cityId": "84aefaf8-9715-55cd-85cb-33bfc8c9d496",
+      "status": "passed",
+      "blurb": "",
+      "privateNote": "",
+      "position": 16
+    },
+    {
+      "id": "35b44ba9-2689-5d6e-b343-be2cdf18bdf0",
+      "rosterId": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "candidateId": "44f5148e-50bf-5278-8798-8e5a494470c4",
+      "cityId": "84aefaf8-9715-55cd-85cb-33bfc8c9d496",
+      "status": "passed",
+      "blurb": "",
+      "privateNote": "",
+      "position": 17
+    },
+    {
+      "id": "1f6d67f8-c8da-5361-bd49-9528ee05a042",
+      "rosterId": "2697a1d1-335a-58a4-8d89-613b3c2dee44",
+      "candidateId": "955eb6bd-6d1b-5961-b7b0-52e6b57ae386",
+      "cityId": "84aefaf8-9715-55cd-85cb-33bfc8c9d496",
+      "status": "maybe",
+      "blurb": "",
+      "privateNote": "",
+      "position": 18
+    }
+  ],
+  "feedback": [],
+  "bookingTypes": [
+    {
+      "id": "0615fabb-4c05-591b-9b88-dc248bf720dc",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Intake conversation",
+      "kind": "intake",
+      "durationMin": 60,
+      "priceCents": 0,
+      "active": true
+    },
+    {
+      "id": "4ac571cb-1425-598a-be90-5bf085c87334",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Introduction",
+      "kind": "introduction",
+      "durationMin": 90,
+      "priceCents": 0,
+      "active": true
+    },
+    {
+      "id": "892923a0-8089-5b35-8c8d-497cf2bb92e9",
+      "agencyId": "895283e1-7886-5868-89d0-b31a8b0dd695",
+      "name": "Check-in",
+      "kind": "checkin",
+      "durationMin": 30,
+      "priceCents": 0,
+      "active": true
+    }
+  ],
+  "bookings": [],
+  "payments": []
+}
