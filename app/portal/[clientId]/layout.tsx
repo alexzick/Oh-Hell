@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { getRepo, isDemoMode } from "@/lib/db";
+import { currentViewer } from "@/lib/auth";
 import { BrandStyle, Wordmark } from "@/components/brand";
 
 /**
@@ -19,6 +21,17 @@ export default async function PortalLayout({
   params: Promise<{ clientId: string }>;
 }) {
   const { clientId } = await params;
+
+  const viewer = await currentViewer();
+  if (!viewer) redirect(`/signin?next=/portal/${clientId}`);
+  // A client reaches only their own portal. RLS would return nothing anyway;
+  // saying so here turns a blank page into a redirect.
+  const isOwnPortal = viewer.client?.id === clientId;
+  const isStaffPreview = Boolean(viewer.member);
+  if (!isOwnPortal && !isStaffPreview) {
+    redirect(viewer.client ? `/portal/${viewer.client.id}` : "/signin");
+  }
+
   const view = await getRepo().loadPortal(clientId);
   if (!view) notFound();
 
@@ -36,11 +49,13 @@ export default async function PortalLayout({
             <Wordmark brand={view.agency.brand} />
           </div>
           <div className="topbar-col right">
-            {isDemoMode && (
+            {isStaffPreview ? (
               <Link className="btn ghost" href={`/app/clients/${clientId}`}>
                 Back to workspace
               </Link>
-            )}
+            ) : !isDemoMode ? (
+              <a className="btn ghost" href="/auth/signout">Sign out</a>
+            ) : null}
           </div>
         </div>
       </header>

@@ -18,12 +18,14 @@ const NAV = [
 ] as const;
 
 export function WorkspaceChrome({
-  brand, agencyName, clients, demoMode, children,
+  brand, agencyName, clients, demoMode, viewerName, canSignOut, children,
 }: {
   brand: Brand;
   agencyName: string;
   clients: ClientSummary[];
   demoMode: boolean;
+  viewerName?: string;
+  canSignOut?: boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -109,6 +111,12 @@ export function WorkspaceChrome({
               <button className="btn ghost" onClick={() => router.push(`/portal/${current.id}`)}>
                 Client view
               </button>
+            )}
+            {canSignOut && (
+              <a className="micro" href="/auth/signout" title={`Signed in as ${viewerName ?? ""}`}
+                 style={{ letterSpacing: "0.1em" }}>
+                Sign out
+              </a>
             )}
           </div>
         </div>
